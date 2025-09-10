@@ -32,6 +32,7 @@ jobs:
       with:
       # Artifact name
         name: drop
-        # A file, directory or wildcard pattern that describes what to upload  
+        # A file, directory or wildcard pattern that describes what to upload
+        path: /home/runner/work/srdotnetapp/srdotnetapp/bin/Debug/net8.0/*
           
     
