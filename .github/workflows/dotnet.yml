@@ -1,18 +1,48 @@
-name: Greeting on variable day
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: dotNetAppBuild
+
+permissions:
+  id-token: write
+  contents: read
+  attestations: write
 
 on:
-  workflow_dispatch
-
-env:
-  DAY_OF_WEEK: Monday
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  greeting_job:
-    runs-on: self-hosted
-    env:
-      Greeting: Hello
+  build:
+
+    runs-on: ubuntu-latest
+
     steps:
-      - name: "Say Hello Mona it's Monday"
-        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
-        env:
-          First_Name: Mona
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Generate artifact attestation
+      uses: actions/attest-build-provenance@v3
+      with:
+        subject-path: '/home/runner/work/srdotnetapp/srdotnetapp/bin/Debug/net8.0/'
+    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.6.2
+      with:
+      # Artifact name
+        name: drop
+        # A file, directory or wildcard pattern that describes what to upload
+        path: /home/runner/work/srdotnetapp/srdotnetapp/bin/Debug/net8.0/*
+          
+    
