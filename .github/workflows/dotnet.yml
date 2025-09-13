@@ -44,5 +44,7 @@ jobs:
         name: drop
         # A file, directory or wildcard pattern that describes what to upload
         path: /home/runner/work/srdotnetapp/srdotnetapp/bin/Debug/net8.0/*
+
+    - run: gh attestation verify '/home/runner/work/srdotnetapp/srdotnetapp/bin/Debug/net8.0/dotnetcoresample.dll' -R ${{ github.repository }}
           
     
